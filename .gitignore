@@ -385,4 +385,7 @@ Temporary Items
 # Ignore all local history of files
 .history
 
+### Expo ###
+.expo-shared
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,node,react,reactnative
