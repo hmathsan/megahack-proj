@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, View, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const Home = () => {
 
@@ -22,8 +23,6 @@ const Home = () => {
                     <Text style={styles.appTitle}>Nome do aplicativo</Text>
                     <Text style={styles.bordao}>Resumo/Bordão</Text>
                     <Text style={styles.resumo} >Saiba as necessidades e os acontecimentos dos canteiros de obras em tempo real</Text>
-
-                    
                 </View>
             
                 <View style={styles.container}>
@@ -31,7 +30,9 @@ const Home = () => {
                     <TextInput placeholder='Senha' autoCompleteType='password' style={styles.input} />
                     
                     <Button title='Entrar' titleStyle={styles.buttonText} buttonStyle={styles.button} />
-                    <Text style={styles.criarConta} onPress={handleNavigationToCadastro}>Criar conta</Text>
+                    <TouchableOpacity onPress={handleNavigationToCadastro}>
+                        <Text style={styles.criarConta} >Criar conta</Text>
+                    </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
         </>
