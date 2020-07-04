@@ -6,6 +6,8 @@ import Home from './pages/Home'
 import Cadastro from './pages/Cadastro'
 import EmpresaForm from './pages/EmpresaForm';
 import FuncionarioForm from './pages/FuncionárioForm'
+import MainPageFuncionario from './pages/MainPageFuncionario';
+import MainPageEmpresa from './pages/MainPageEmpresa';
 
 const AppStack = createStackNavigator();
 
@@ -24,6 +26,8 @@ const routes = () => {
                 <AppStack.Screen name='Cadastro' component={Cadastro} />
                 <AppStack.Screen name='EmpresaForm' component={EmpresaForm} />
                 <AppStack.Screen name='FuncionarioForm' component={FuncionarioForm} />
+                <AppStack.Screen name='MainPageFuncionario' component={MainPageFuncionario} />
+                <AppStack.Screen name='MainPageEmpresa' component={MainPageEmpresa} />
             </AppStack.Navigator>
         </NavigationContainer>
     )

@@ -5,7 +5,7 @@ class UsersController {
     async index(Request, Response) {
         const users = await knex('users').select('*');
 
-        return Response.json({users});
+        return Response.json(users);
     }
 
     async show(Request, Response) {

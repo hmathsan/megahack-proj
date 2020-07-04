@@ -5,7 +5,7 @@ class ReportsController {
     async index(Request, Response) {
         const reports = await knex('reports').select('*');
 
-        return Response.json({reports});
+        return Response.json(reports);
     }
 
     async show(Request, Response) {

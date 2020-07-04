@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Feather as Icon } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { View, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, Text, KeyboardAvoidingView, Platform } from 'react-native'
+import { View, SafeAreaView, TouchableOpacity, StyleSheet, TextInput, Text, KeyboardAvoidingView, Platform, Alert } from 'react-native'
 import { Button } from 'react-native-elements'
 import RNPickerSelect from 'react-native-picker-select'
 
-const empresas = [
-    {
-        label: 'empresa1',
-        value: 'empresa1',
-        key: 'empresa1'
-    },
-    {
-        label: 'empresa2',
-        value: 'empresa2',
-        key: 'empresa2'
-    }
-]
+import api from '../../services/api';
+
+let empresas = [{}]
+
+interface EmpresaPicker {
+    label: string,
+    value: string
+}
+
+interface Users {
+    tipo: string,
+    nome: string,
+    sobrenome: string,
+    email: string,
+    empresa: string,
+    senha: string
+}
 
 const FuncionarioForm = () => {
+    const [todasEmpresas, setTodasEmpresas] = useState<string[]>([]);
+
     const [nome, setNome] = useState('');
     const [sobrenome, setSobrenome] = useState('');
     const [email, setEmail] = useState('');
@@ -26,6 +33,49 @@ const FuncionarioForm = () => {
     const [senha, setSenha] = useState('');
 
     const navigation = useNavigation()
+
+    useEffect(() => {
+        api.get<Users[]>('users').then(response => {
+
+            const filter = response.data.map(data => data.tipo === 'Empresa' ? data.empresa : '')
+            const filtered = filter.filter((el) => {
+                return el != ''
+            })
+
+            setTodasEmpresas(filtered);
+        })
+    }, [])
+
+    function handleSubmit() {
+        if(nome === '' || sobrenome === '' || email === '' || empresa === 'empresaNaoSelecionada' || senha === ''){
+            return Alert.alert(
+                'Dados incompletos',
+                'Verifique se todos os campos estão preenchidos',
+                [{text: 'OK'}]
+            );
+        } else {
+            handlePost()
+        }
+    }
+
+    async function handlePost() {
+        const data = {
+            tipo: 'Funcionario',
+            nome,
+            sobrenome,
+            email,
+            empresa,
+            senha
+        }
+
+        await api.post('users', data, {headers: { 'Content-Type': 'application/json'}})
+
+        Alert.alert(
+            'Usuário criado',
+            'Usuário criado com sucesso',
+            [{text: 'Continuar', onPress: () => navigation.navigate('MainPageFuncionario')}]
+        )
+    }
 
     function handleNavigateBack() {
         navigation.goBack();
@@ -42,24 +92,30 @@ const FuncionarioForm = () => {
                     <View style={styles.form}>
                         <View style={styles.separator}>
                             <Text style={styles.inputName}>Nome:</Text>
-                            <TextInput style={styles.input} onChangeText={text => setNome(text)} />
+                            <TextInput style={styles.input} onChangeText={text => setNome(text)} keyboardAppearance='dark' />
                         </View>
                         <View style={styles.separator}>
                             <Text style={styles.inputName}>Sobrenome:</Text>
-                            <TextInput style={styles.input} onChangeText={text => setSobrenome(text)} />
+                            <TextInput style={styles.input} onChangeText={text => setSobrenome(text)} keyboardAppearance='dark' />
                         </View>
                         <View style={styles.separator}>
                             <Text style={styles.inputName}>E-Mail:</Text>
-                            <TextInput style={styles.input} onChangeText={text => setEmail(text)} />
+                            <TextInput style={styles.input} 
+                                onChangeText={text => setEmail(text)}
+                                autoCompleteType='email'
+                                autoCapitalize='none'
+                                keyboardAppearance='dark'
+                                keyboardType='email-address'
+                            />
                         </View>
                         <View style={styles.separator}>
                             <Text style={styles.inputName}>Nome da empresa:</Text>
                             <RNPickerSelect
-                                placeholder={{ label: 'Selecione sua empresa', value: '' }}
+                                placeholder={{ label: 'Selecione sua empresa', value: 'empresaNaoSelecionada' }}
                                 onValueChange={(value) => {
                                     setEmpresa(value)
                                 }}
-                                items={empresas}
+                                items={todasEmpresas.map(empresa => {return { label: empresa, value: empresa } })}
                                 style={pickerStyle}
                                 Icon={() => {
                                     return (
@@ -70,13 +126,18 @@ const FuncionarioForm = () => {
                         </View>
                         <View style={styles.separator}>
                             <Text style={styles.inputName}>Senha:</Text>
-                            <TextInput style={styles.input} onChangeText={text => setSenha(text)} />
+                            <TextInput style={styles.input} 
+                                onChangeText={text => setSenha(text)} 
+                                keyboardAppearance='dark'
+                                autoCapitalize='none'
+                                secureTextEntry={true}
+                            />
                         </View>
 
                     </View>
                 </KeyboardAvoidingView>
                 <View style={styles.buttonPosition}>
-                    <Button title='Entrar' titleStyle={styles.buttonText} buttonStyle={styles.button} />
+                    <Button title='Entrar' titleStyle={styles.buttonText} buttonStyle={styles.button} onPress={handleSubmit} />
                 </View>
             </View>
         </SafeAreaView>

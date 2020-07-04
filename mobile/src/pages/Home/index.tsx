@@ -1,16 +1,58 @@
-import React from 'react'
-import { Text, View, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Text, View, StyleSheet, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
+import api from '../../services/api'
+
+interface Users {
+    id: number,
+    tipo: string,
+    nome: string,
+    sobrenome: string,
+    email: string,
+    empresa: string,
+    senha: string
+}
+
 const Home = () => {
+    const [users, setUsers] = useState<Users[]>([]);
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
 
     const navigation = useNavigation()
 
     function handleNavigationToCadastro() {
         navigation.navigate('Cadastro');
     }
+
+    function handleLogIn() {
+        let length = users.length
+        console.log(users.length)
+        users.map(user => {
+            if(email === user.email && senha === user.senha){
+                if(user.tipo === 'Empresa'){
+                    return navigation.navigate('MainPageEmpresa')
+                } else {
+                    return navigation.navigate('MainPageFuncionario')
+                }
+            } else if (length <= 1) {
+                return Alert.alert(
+                    'Usuário não encontrado',
+                    'Verifique se o E-Mail ou senha estão corretos',
+                    [{ text: 'OK' }]
+                )
+            }
+            --length
+        })
+    }
+
+    useEffect(() => {
+        api.get('users').then(response => {
+            setUsers(response.data);
+        });
+    }, []);
 
     return (
         <>
@@ -26,10 +68,26 @@ const Home = () => {
                 </View>
             
                 <View style={styles.container}>
-                    <TextInput placeholder='E-Mail' autoCompleteType='email' style={styles.input} />
-                    <TextInput placeholder='Senha' autoCompleteType='password' style={styles.input} />
+                    <TextInput 
+                        placeholder='E-Mail' 
+                        autoCompleteType='email' 
+                        style={styles.input} 
+                        onChangeText={text => setEmail(text)} 
+                        autoCapitalize='none' 
+                        keyboardAppearance='dark'
+                        keyboardType='email-address'
+                    />
+                    <TextInput 
+                        placeholder='Senha' 
+                        autoCompleteType='password' 
+                        style={styles.input} 
+                        onChangeText={text => setSenha(text)} 
+                        autoCapitalize='none'
+                        keyboardAppearance='dark'
+                        secureTextEntry={true}
+                    />
                     
-                    <Button title='Entrar' titleStyle={styles.buttonText} buttonStyle={styles.button} />
+                    <Button title='Entrar' titleStyle={styles.buttonText} buttonStyle={styles.button} onPress={handleLogIn} />
                     <TouchableOpacity onPress={handleNavigationToCadastro}>
                         <Text style={styles.criarConta} >Criar conta</Text>
                     </TouchableOpacity>

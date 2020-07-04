@@ -5,7 +5,7 @@ class LocationsController {
     async index (Request, Response) {
         const locations = await knex('locations').select('*');
 
-        return Response.json({locations});
+        return Response.json(locations);
     }
 
     async show (Request, Response) {
