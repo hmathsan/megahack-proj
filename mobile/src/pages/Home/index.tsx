@@ -33,9 +33,9 @@ const Home = () => {
         users.map(user => {
             if(email === user.email && senha === user.senha){
                 if(user.tipo === 'Empresa'){
-                    return navigation.navigate('MainPageEmpresa')
+                    return navigation.navigate('MainPageEmpresa', user)
                 } else {
-                    return navigation.navigate('MainPageFuncionario')
+                    return navigation.navigate('MainPageFuncionario', user)
                 }
             } else if (length <= 1) {
                 return Alert.alert(
@@ -91,6 +91,7 @@ const Home = () => {
                     <TouchableOpacity onPress={handleNavigationToCadastro}>
                         <Text style={styles.criarConta} >Criar conta</Text>
                     </TouchableOpacity>
+
                 </View>
             </KeyboardAvoidingView>
         </>

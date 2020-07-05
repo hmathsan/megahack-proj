@@ -22,6 +22,8 @@ class LocationsController {
 
     async create (Request, Response) {
         const {
+            empresa,
+            nome,
             longitude,
             latitude
         } = Request.body
@@ -29,6 +31,8 @@ class LocationsController {
         const trx = await knex.transaction();
 
         const location = {
+            empresa,
+            nome,
             longitude,
             latitude
         }

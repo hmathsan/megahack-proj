@@ -8,6 +8,8 @@ import EmpresaForm from './pages/EmpresaForm';
 import FuncionarioForm from './pages/FuncionárioForm'
 import MainPageFuncionario from './pages/MainPageFuncionario';
 import MainPageEmpresa from './pages/MainPageEmpresa';
+import RelatarProblemaPage from './pages/MainPageFuncionario/RelatarProblemaPage';
+import NovoLocalPage from './pages/MainPageEmpresa/NovoLocalPage';
 
 const AppStack = createStackNavigator();
 
@@ -18,7 +20,7 @@ const routes = () => {
                 headerMode='none'
                 screenOptions= {{
                     cardStyle: {
-                        backgroundColor: '#F0F0F0'
+                        backgroundColor: '#F0F0F5'
                     }
                 }}
             >
@@ -28,6 +30,9 @@ const routes = () => {
                 <AppStack.Screen name='FuncionarioForm' component={FuncionarioForm} />
                 <AppStack.Screen name='MainPageFuncionario' component={MainPageFuncionario} />
                 <AppStack.Screen name='MainPageEmpresa' component={MainPageEmpresa} />
+                <AppStack.Screen name='RelatarProblemaPage' component={RelatarProblemaPage} />
+                <AppStack.Screen name='NovoLocalPage' component={NovoLocalPage} />
+
             </AppStack.Navigator>
         </NavigationContainer>
     )

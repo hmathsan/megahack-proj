@@ -73,7 +73,7 @@ const FuncionarioForm = () => {
         Alert.alert(
             'Usuário criado',
             'Usuário criado com sucesso',
-            [{text: 'Continuar', onPress: () => navigation.navigate('MainPageFuncionario')}]
+            [{text: 'Continuar', onPress: () => navigation.navigate('MainPageFuncionario', data)}]
         )
     }
 
@@ -191,7 +191,9 @@ const styles = StyleSheet.create({
     },
     form: {
         flex: 1,
-        marginTop: 15
+        marginTop: 15,
+        justifyContent:'center',
+        alignItems: 'center'
     },
     input: {
         width: 320,
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         padding: 15,
         fontFamily: 'Roboto_400Regular',
-        marginTop: 5
+        marginTop: 5,
     },
     inputName: {
         fontFamily: 'Roboto_400Regular',
