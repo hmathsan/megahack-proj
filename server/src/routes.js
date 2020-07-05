@@ -17,8 +17,7 @@ routes.get('/reports', reportsController.index);
 routes.get('/reports/:id', reportsController.show);
 routes.post('/reports', reportsController.create);
 
-routes.get('/locations', locationsController.index);
-routes.get('/locations/:id', locationsController.show);
+routes.get('/locations', locationsController.show);
 routes.post('/locations', locationsController.create);
 
 module.exports = routes;

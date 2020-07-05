@@ -22,7 +22,7 @@ const MainPageFuncionario = () => {
     const routeParams = route.params as Users;
 
     function handleProblemNavigation() {
-        navigation.navigate('RelatarProblemaPage');
+        navigation.navigate('RelatarProblemaPage', routeParams);
     }
 
     return (

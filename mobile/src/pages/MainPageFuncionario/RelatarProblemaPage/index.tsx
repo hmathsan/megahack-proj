@@ -1,11 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigation } from '@react-navigation/native'
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, TextInput, KeyboardAvoidingView, Platform } from 'react-native'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, ScrollView, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native'
 import { Feather as Icon } from '@expo/vector-icons'
 import { Button } from 'react-native-elements'
 
 import RNPickerSelect from 'react-native-picker-select'
 
+import api from '../../../services/api'
+
+interface Locations {
+    id: number,
+    empresa: string,
+    nome:string,
+    longitude:string,
+    latitude:string
+}
+
+interface Users {
+    id: number,
+    tipo: string,
+    nome: string,
+    sobrenome: string,
+    email: string,
+    empresa: string,
+    senha: string
+}
 
 const Problemas = [
     {
@@ -38,25 +57,59 @@ const Problemas = [
     },    
 ]
 
-const Locais = [
-    {
-        label: 'local',
-        value: 'local'
-    }
-]
-
 const RelatarProblemaPage = () => {
+    const [allLocations, setAllLocations] = useState<Locations[]>([])
+    const [description, setDescription] = useState('');
     const [problema, setProblema] = useState('');
-    const [local, setLocal] = useState('');
+    const [local, setLocal] = useState();
     
     const navigation = useNavigation()
+    const route = useRoute()
+    const routeParams = route.params as Users
+
+    useEffect(() => {
+        api.get<Locations[]>('locations', {
+            params: {
+                empresa: routeParams.empresa
+            }
+        }).then(response => {
+            setAllLocations(response.data)
+        })
+    }, [])
 
     function handleNavigateBack() {
         navigation.goBack()
     }
 
     function handleProblemaSubmit() {
+        if(problema === 'problemaNaoSelecionado' || local === 'localNaoSelecionado' || description === ''){
+            Alert.alert(
+                'Dados incompletos',
+                'Verifique se todos os campos foram preenchidos',
+                [{text: 'OK'}]
+            )
+        } else {
+            handlePost()
+        }
 
+        
+    }
+
+    async function handlePost() {
+        console.log(local)
+        const data = {
+            user_id: routeParams.id,
+            type: problema,
+            location_id: String(local),
+            description
+        }
+        await api.post('reports', data, {headers: { 'Content-Type': 'application/json'}})
+
+        Alert.alert(
+            'Report criado com sucesso',
+            'Agora seus superiores poderão seus reports',
+            [{text: 'OK', onPress: () => navigation.goBack()}]
+        )
     }
 
     return (
@@ -84,7 +137,7 @@ const RelatarProblemaPage = () => {
                         />
 
                         <Text style={styles.title} >Descreva o ocorrido</Text>
-                        <TextInput textAlignVertical='top' multiline={true} style={styles.input} />
+                        <TextInput textAlignVertical='top' multiline={true} style={styles.input} onChangeText={text => setDescription(text)} />
 
                         <Text style={styles.title}>Qual seu local de trabalho?</Text>
                         <RNPickerSelect 
@@ -92,7 +145,9 @@ const RelatarProblemaPage = () => {
                             onValueChange={(value) => {
                                 setLocal(value)
                             }}
-                            items={Locais}
+                            items={allLocations.map(location => {
+                                return {label: location.nome, value: location.id, key: location.nome}
+                            })}
                             style={pickerStyle}
                             Icon={() => {
                                 return (

@@ -9,15 +9,15 @@ class LocationsController {
     }
 
     async show (Request, Response) {
-        const { id } = Request.params;
+        const { empresa } = Request.query;
 
-        const location = await knex('locations').where('id', id).first();
+        const location = await knex('locations').where('empresa', empresa).select('*');
 
         if(!location){
             return Response.status(400).json({message: "Location not found!"});
         }
 
-        return Response.json({location});
+        return Response.json(location);
     }
 
     async create (Request, Response) {
