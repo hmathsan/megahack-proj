@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, StyleSheet, TextInput, KeyboardAvoidingView, Platform, Alert } from 'react-native'
+import { Text, View, StyleSheet, TextInput, KeyboardAvoidingView, Platform, Alert, ImageBackground, Dimensions } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -54,15 +54,19 @@ const Home = () => {
     }, []);
 
     return (
-        <>
-            <KeyboardAvoidingView
+        <KeyboardAvoidingView
                 style={{flex:1}}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             >
                 
                 <View style={styles.main}>
-                    <Text style={styles.appTitle}>Nome do aplicativo</Text>
-                    <Text style={styles.bordao}>Resumo/Bordão</Text>
+                    <ImageBackground
+                        source={require('../../assets/cityscapes.png')}
+                        style={{position: 'absolute', bottom: Dimensions.get('screen').height / 3, opacity: 0.6}}
+                        imageStyle={{width: Dimensions.get('window').width, height: Dimensions.get('window').height / 2.5}}
+                    />
+
+                    <Text style={styles.appTitle}>Obra sem Covid</Text>
                     <Text style={styles.resumo} >Saiba as necessidades e os acontecimentos dos canteiros de obras em tempo real</Text>
                 </View>
             
@@ -93,7 +97,6 @@ const Home = () => {
 
                 </View>
             </KeyboardAvoidingView>
-        </>
     )
 }
 
@@ -101,8 +104,8 @@ const styles = StyleSheet.create({
     main: {
         flex: 1,
         justifyContent: 'center',
-        padding: 30,
-        backgroundColor: '#F0F0F0'
+        backgroundColor: '#F0F0F0',
+        padding: 30
     },
     appTitle: {
         fontFamily: 'Ubuntu_700Bold',
@@ -118,7 +121,7 @@ const styles = StyleSheet.create({
     resumo: {
         fontFamily: 'Roboto_400Regular',
         fontSize: 18,
-        marginTop: 50
+        marginTop: 20
     },
     container: {
         justifyContent: 'center',
@@ -126,7 +129,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#20BF6B',
         borderTopLeftRadius: 35,
         borderTopRightRadius: 35,
-        height: 350,
+        height: Dimensions.get('screen').height / 2,
         shadowOpacity: 0.2
     },
     input: {
