@@ -25,4 +25,3 @@ The main technology used was React-Native for the app.
 <img src='./README_images/github1.gif' width='270' height='540'>
 
 <img src='./README_images/github2.gif' width='270' height='540'>
-

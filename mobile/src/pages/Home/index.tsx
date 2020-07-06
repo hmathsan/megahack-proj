@@ -127,8 +127,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#20BF6B',
-        borderTopLeftRadius: 35,
-        borderTopRightRadius: 35,
         height: Dimensions.get('screen').height / 2,
         shadowOpacity: 0.2
     },
