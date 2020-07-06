@@ -29,7 +29,6 @@ interface Reports {
 
 const MainPageEmpresa = () => {
     const [allReports, setAllReports] = useState<Reports[]>([]);
-    const [reportsLength, setReportsLenght] = useState<Number>()
 
     const navigation = useNavigation();
     const route = useRoute();
@@ -42,7 +41,6 @@ const MainPageEmpresa = () => {
             }
         }).then(response => {
             setAllReports(response.data)
-            setReportsLenght(allReports.length)
         })
     }, [])
 
@@ -73,7 +71,7 @@ const MainPageEmpresa = () => {
             <View style={{flex: 1, justifyContent: 'center', marginTop: 10}}>
                 {Platform.OS === 'android' ? <Button icon={<Icon name='map' size={24} color='#fff' />} iconRight={true} title='Cadastrar local ' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={handleLocalNavigation} /> : <></>}
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-                    <Text style={styles.title}>{reportsLength} {reportsLength === 1 ? 'Problema Reportado' : 'Problemas Reportados'}</Text>
+                    <Text style={styles.title}>{allReports.length} Problema Reportado</Text>
                     {/* <Button
                         icon={
                             <Icon name='arrow-right' size={24} color='#fff' />
