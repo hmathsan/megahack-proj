@@ -26,6 +26,11 @@ interface Users {
     senha: string
 }
 
+interface Local {
+    latitude: string,
+    longitude: string
+}
+
 const Problemas = [
     {
         label: 'Uso inadequado de EPI',
@@ -61,7 +66,7 @@ const RelatarProblemaPage = () => {
     const [allLocations, setAllLocations] = useState<Locations[]>([])
     const [description, setDescription] = useState('');
     const [problema, setProblema] = useState('');
-    const [local, setLocal] = useState();
+    const [local, setLocal] = useState<Local>();
     
     const navigation = useNavigation()
     const route = useRoute()
@@ -82,7 +87,7 @@ const RelatarProblemaPage = () => {
     }
 
     function handleProblemaSubmit() {
-        if(problema === 'problemaNaoSelecionado' || local === 'localNaoSelecionado' || description === ''){
+        if(problema === 'problemaNaoSelecionado' || local?.latitude === '' || description === ''){
             Alert.alert(
                 'Dados incompletos',
                 'Verifique se todos os campos foram preenchidos',
@@ -98,16 +103,18 @@ const RelatarProblemaPage = () => {
     async function handlePost() {
         console.log(local)
         const data = {
-            user_id: routeParams.id,
+            nome: routeParams.nome,
             type: problema,
-            location_id: String(local),
-            description
+            latitude: local?.latitude,
+            longitude: local?.longitude,
+            description,
+            empresa: routeParams.empresa
         }
         await api.post('reports', data, {headers: { 'Content-Type': 'application/json'}})
 
         Alert.alert(
             'Report criado com sucesso',
-            'Agora seus superiores poderão seus reports',
+            'Agora seus superiores poderão visualizar seus reports',
             [{text: 'OK', onPress: () => navigation.goBack()}]
         )
     }
@@ -123,7 +130,7 @@ const RelatarProblemaPage = () => {
                     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} >
                         <Text style={styles.title}>Qual foi o problema encontrado?</Text>
                         <RNPickerSelect 
-                            placeholder={{ label: 'Selecione um problema da lista', value: 'problemaNaoSelecionado'}}
+                            placeholder={{ label: 'Selecione um problema da lista', value: {latitude: '', longitude: ''}}}
                             onValueChange={(value) => {
                                 setProblema(value)
                             }}
@@ -146,7 +153,7 @@ const RelatarProblemaPage = () => {
                                 setLocal(value)
                             }}
                             items={allLocations.map(location => {
-                                return {label: location.nome, value: location.id, key: location.nome}
+                                return {label: location.nome, value: {latitude: location.latitude, longitude: location.longitude}, key: location.nome}
                             })}
                             style={pickerStyle}
                             Icon={() => {

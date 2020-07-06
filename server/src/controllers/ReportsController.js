@@ -9,32 +9,36 @@ class ReportsController {
     }
 
     async show(Request, Response) {
-        const { id } = Request.params;
+        const { empresa } = Request.query;
 
-        const report = await knex('reports').where('id', id).first();
+        const report = await knex('reports').where('empresa', empresa).select('*');
 
         if(!report){
             return Response.status(400).json({message: "Report not found!"})
         }
 
-        return Response.json({report});
+        return Response.json(report);
     }
 
     async create(Request, Response) {
         const {
-            user_id,
+            nome,
             type,
-            location_id,
-            description
+            latitude,
+            longitude,
+            description,
+            empresa
         } = Request.body
 
         const trx = await knex.transaction();
 
         const reports = {
-            user_id,
+            nome,
             type,
-            location_id,
-            description
+            latitude,
+            longitude,
+            description,
+            empresa
         }
 
         await trx('reports').insert(reports);

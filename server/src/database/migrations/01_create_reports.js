@@ -1,10 +1,12 @@
 exports.up = async function(knex) {
     return knex.schema.createTable('reports', table => {
         table.increments('id').primary();
-        table.integer('user_id').notNullable();
+        table.string('nome').notNullable();
         table.string('type').notNullable();
-        table.string('location_id').notNullable();
+        table.string('longitude').notNullable();
+        table.string('latitude').notNullable();
         table.string('description').notNullable();
+        table.string('empresa').notNullable();
     })
 }
 

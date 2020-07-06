@@ -10,6 +10,7 @@ import MainPageFuncionario from './pages/MainPageFuncionario';
 import MainPageEmpresa from './pages/MainPageEmpresa';
 import RelatarProblemaPage from './pages/MainPageFuncionario/RelatarProblemaPage';
 import NovoLocalPage from './pages/MainPageEmpresa/NovoLocalPage';
+import ReportMapPage from './pages/MainPageEmpresa/ReportMapPage';
 
 const AppStack = createStackNavigator();
 
@@ -32,6 +33,7 @@ const routes = () => {
                 <AppStack.Screen name='MainPageEmpresa' component={MainPageEmpresa} />
                 <AppStack.Screen name='RelatarProblemaPage' component={RelatarProblemaPage} />
                 <AppStack.Screen name='NovoLocalPage' component={NovoLocalPage} />
+                <AppStack.Screen name='ReportMapPage' component={ReportMapPage} />
 
             </AppStack.Navigator>
         </NavigationContainer>

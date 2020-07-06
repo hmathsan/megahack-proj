@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, Text, ScrollView, Platform } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Button, Card } from 'react-native-elements'
 import { Feather as Icon } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+
+import api from '../../services/api'
 
 interface Users {
     id: number,
@@ -15,14 +17,41 @@ interface Users {
     senha: string
 }
 
+interface Reports {
+    id: number,
+    description: string,
+    empresa: string,
+    latitude: string,
+    longitude: string,
+    nome: string,
+    type: string,
+}
+
 const MainPageEmpresa = () => {
+    const [allReports, setAllReports] = useState<Reports[]>([]);
+    const [reportsLength, setReportsLenght] = useState<Number>()
 
     const navigation = useNavigation();
     const route = useRoute();
     const routeParams = route.params as Users;
 
+    useEffect(() => {
+        api.get('reports', {
+            params: {
+                empresa: routeParams.empresa
+            }
+        }).then(response => {
+            setAllReports(response.data)
+            setReportsLenght(allReports.length)
+        })
+    }, [])
+
     function handleLocalNavigation() {
         navigation.navigate('NovoLocalPage', routeParams);
+    }
+
+    function handleMapNavigation() {
+        navigation.navigate('ReportMapPage', routeParams)
     }
 
     return (
@@ -44,8 +73,8 @@ const MainPageEmpresa = () => {
             <View style={{flex: 1, justifyContent: 'center', marginTop: 10}}>
                 {Platform.OS === 'android' ? <Button icon={<Icon name='map' size={24} color='#fff' />} iconRight={true} title='Cadastrar local ' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={handleLocalNavigation} /> : <></>}
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-                    <Text style={styles.title}>Problemas Reportados</Text>
-                    <Button
+                    <Text style={styles.title}>{reportsLength} {reportsLength === 1 ? 'Problema Reportado' : 'Problemas Reportados'}</Text>
+                    {/* <Button
                         icon={
                             <Icon name='arrow-right' size={24} color='#fff' />
                         }
@@ -53,23 +82,22 @@ const MainPageEmpresa = () => {
                         title='Verificar no mapa '
                         titleStyle={styles.buttonTitle}
                         buttonStyle={styles.button}
-                        onPress={handleLocalNavigation}
-                    />
+                        onPress={handleMapNavigation}
+                    /> */}
                 </View>
                 <ScrollView
                     style={{ marginTop: 20,  }}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{justifyContent: 'center', alignItems: 'center' }}
                 >
-                    <TouchableOpacity style={styles.card}>
+                    {allReports.map(report => (
+                        <TouchableOpacity key={String(report.id)} style={styles.card} >
+                            <Text style={styles.cardTitle}>{report.nome}</Text>
+                            <Text style={styles.cardTitle}>{report.type}</Text>
+                            <Text style={styles.report}>{report.description}</Text>
+                        </TouchableOpacity>
+                    ))}
 
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.card}>
-
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.card}>
-
-                    </TouchableOpacity>
                 </ScrollView>
             </View>
 
@@ -145,11 +173,24 @@ const styles = StyleSheet.create({
     },
     card: {
         width: 320,
-        height: 140,
+        height: 160,
         backgroundColor: '#fff',
         borderRadius: 35,
         shadowOpacity: 0.2,
         marginTop: 10,
-        marginBottom: 20
+        marginBottom: 20,
+    },
+    cardTitle: {
+        fontFamily: 'Ubuntu_700Bold',
+        fontWeight: 'bold',
+        fontSize: 16,
+        marginLeft: 20,
+        marginTop: 10
+    },
+    report: {
+        fontFamily: 'Roboto_400Regular',
+        fontSize: 16,
+        marginLeft: 20,
+        marginTop: 10
     }
 })

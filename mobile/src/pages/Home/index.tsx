@@ -29,7 +29,6 @@ const Home = () => {
 
     function handleLogIn() {
         let length = users.length
-        console.log(users.length)
         users.map(user => {
             if(email === user.email && senha === user.senha){
                 if(user.tipo === 'Empresa'){

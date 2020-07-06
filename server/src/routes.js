@@ -13,8 +13,7 @@ routes.get('/users', usersController.index);
 routes.get('/users/:id', usersController.show);
 routes.post('/users', usersController.create);
 
-routes.get('/reports', reportsController.index);
-routes.get('/reports/:id', reportsController.show);
+routes.get('/reports', reportsController.show);
 routes.post('/reports', reportsController.create);
 
 routes.get('/locations', locationsController.show);
